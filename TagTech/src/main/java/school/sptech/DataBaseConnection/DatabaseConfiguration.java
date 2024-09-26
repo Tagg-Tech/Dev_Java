@@ -10,9 +10,9 @@ public class DatabaseConfiguration {
     public DatabaseConfiguration() {
         BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/testeAutomacao");
-        dataSource.setUsername("enzo");
-        dataSource.setPassword("Ensunel@2006");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/TagTech");
+        dataSource.setUsername("root");
+        dataSource.setPassword("");
         this.template = new JdbcTemplate(dataSource);
     }
 
