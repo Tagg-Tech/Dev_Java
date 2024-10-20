@@ -28,6 +28,10 @@ public class Main implements RequestHandler<S3Event, String> {
         RelatorioSemana relatorioSemana = null;
         try {
             relatorioSemana = mapper.map(s3InputStream);
+
+            if(relatorioSemana == null){
+                return "Não há dados a serem processados na semana!";
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

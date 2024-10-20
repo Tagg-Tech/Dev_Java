@@ -38,6 +38,9 @@ public class Mapper {
                 // Adicionar à lista
                 dataFormats.add(dataFormat);
             }
+
+            // Verificando se há dados no arquivo de captura
+            if(percRam.isEmpty()){ return null; }
             System.out.println(percRam);
         }
 
