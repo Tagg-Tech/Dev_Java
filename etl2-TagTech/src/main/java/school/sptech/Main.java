@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
 import java.io.*;
+import java.time.LocalDate;
 
 public class Main implements RequestHandler<S3Event, String> {
 
@@ -48,8 +49,13 @@ public class Main implements RequestHandler<S3Event, String> {
         // Converte o ByteArrayOutputStream para InputStream para enviar ao bucket de destino
         InputStream csvInputStream = new ByteArrayInputStream(csvOutputStream.toByteArray());
 
+        // Definindo nomenclatura de arquivo
+        LocalDate data = LocalDate.now();
+        String finalData = data.getMonthValue() + "-" + data.getDayOfMonth();
+        String fileName = "relatorio" + finalData + ".csv";
+
         // Envio do CSV para o bucket de destino
-        s3Client.putObject(DESTINATION_BUCKET, "relatorioSemanal.csv", csvInputStream, null);
+        s3Client.putObject(DESTINATION_BUCKET, fileName, csvInputStream, null);
 
         return "Arquivo processado com sucesso";
     }
