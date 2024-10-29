@@ -9,23 +9,23 @@ import java.util.List;
 
 public class CsvWriter {
     // Geração de arquivo caso não exista no bucket trusted
-    public ByteArrayOutputStream writeCsv(List<Stock> stocks) throws IOException {
+    public ByteArrayOutputStream writeCsv(List<RegisterFormat> registerFormats) throws IOException {
         // Criar um CSV em memória utilizando ByteArrayOutputStream
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
         CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT.withHeader("idDados", "dataHora", "percCPU", "tempoInvativo", "percRAM", "percDisc", "usedDisc", "fkNotebook"));
 
         // Processar e escrever cada objeto no CSV em linha
-        for (Stock stock : stocks) {
+        for (RegisterFormat registerFormat : registerFormats) {
             csvPrinter.printRecord(
-                    stock.getIdDados(),
-                    stock.getDataHora(),
-                    stock.getPercCPU(),
-                    stock.getTempoInativo(),
-                    stock.getPercRAM(),
-                    stock.getPercDisc(),
-                    stock.getUsedDisc(),
-                    stock.getFkNotebook()
+                    registerFormat.getIdDados(),
+                    registerFormat.getDataHora(),
+                    registerFormat.getPercCPU(),
+                    registerFormat.getTempoInativo(),
+                    registerFormat.getPercRAM(),
+                    registerFormat.getPercDisc(),
+                    registerFormat.getUsedDisc(),
+                    registerFormat.getFkNotebook()
             );
         }
 
@@ -39,40 +39,40 @@ public class CsvWriter {
 
 
     // Sobrecarga de méto-do para geração de arquivo caso exista no bucket trusted
-    public ByteArrayOutputStream writeCsv(List<Stock> stocks, List<Stock> stocks1) throws IOException {
+    public ByteArrayOutputStream writeCsv(List<RegisterFormat> registerFormats, List<RegisterFormat> stocks1) throws IOException {
         // Criar um CSV em memória utilizando ByteArrayOutputStream
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
         CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT.withHeader("idDados", "dataHora", "percCPU", "tempoInvativo", "percRAM", "percDisc", "usedDisc", "fkNotebook"));
         // Pegando último id gerado para mesclagem
-        Stock lastObject = stocks.get(stocks.size() - 1);
+        RegisterFormat lastObject = registerFormats.get(registerFormats.size() - 1);
         Integer lastId = lastObject.getIdDados();
 
         // Processar e escrever cada objeto no CSV em linha
-        for (Stock stock : stocks) {
+        for (RegisterFormat registerFormat : registerFormats) {
             csvPrinter.printRecord(
-                    stock.getIdDados(),
-                    stock.getDataHora(),
-                    stock.getPercCPU(),
-                    stock.getTempoInativo(),
-                    stock.getPercRAM(),
-                    stock.getPercDisc(),
-                    stock.getUsedDisc(),
-                    stock.getFkNotebook()
+                    registerFormat.getIdDados(),
+                    registerFormat.getDataHora(),
+                    registerFormat.getPercCPU(),
+                    registerFormat.getTempoInativo(),
+                    registerFormat.getPercRAM(),
+                    registerFormat.getPercDisc(),
+                    registerFormat.getUsedDisc(),
+                    registerFormat.getFkNotebook()
             );
         }
 
         // Processar e escrever objetos de stocks1, incrementando o idDados
-        for (Stock stock : stocks1) {
+        for (RegisterFormat registerFormat : stocks1) {
             csvPrinter.printRecord(
-                    stock.getIdDados() + lastId,
-                    stock.getDataHora(),
-                    stock.getPercCPU(),
-                    stock.getTempoInativo(),
-                    stock.getPercRAM(),
-                    stock.getPercDisc(),
-                    stock.getUsedDisc(),
-                    stock.getFkNotebook()
+                    registerFormat.getIdDados() + lastId,
+                    registerFormat.getDataHora(),
+                    registerFormat.getPercCPU(),
+                    registerFormat.getTempoInativo(),
+                    registerFormat.getPercRAM(),
+                    registerFormat.getPercDisc(),
+                    registerFormat.getUsedDisc(),
+                    registerFormat.getFkNotebook()
             );
         }
 

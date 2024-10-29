@@ -32,7 +32,7 @@ public class Main implements RequestHandler<S3Event, String> {
             InputStream s3InputStream = s3Client.getObject(sourceBucket, sourceKey).getObjectContent();
             Mapper mapper = new Mapper();
             // Conversão do CSV para uma lista de objetos Stock usando o Mapper
-            List<Stock> stocks = mapper.map(s3InputStream);
+            List<RegisterFormat> registerFormats = mapper.map(s3InputStream);
             // Geração do arquivo CSV a partir da lista de Stock usando o CsvWriter
             CsvWriter csvWriter = new CsvWriter();
 
@@ -41,15 +41,15 @@ public class Main implements RequestHandler<S3Event, String> {
             boolean s3ObjExist = s3Client.doesObjectExist(DESTINATION_BUCKET, "allData.csv");
             if(s3ObjExist){
                 InputStream s3InputStreamNew = s3Client.getObject(DESTINATION_BUCKET, "allData.csv").getObjectContent();
-                List<Stock> stocks1 = mapper.map(s3InputStreamNew);
+                List<RegisterFormat> stocks1 = mapper.map(s3InputStreamNew);
                 s3Client.deleteObject(DESTINATION_BUCKET, "allData.csv");
 
-                ByteArrayOutputStream csvOutputStream = csvWriter.writeCsv(stocks, stocks1);
+                ByteArrayOutputStream csvOutputStream = csvWriter.writeCsv(registerFormats, stocks1);
                 InputStream csvInputStream = new ByteArrayInputStream(csvOutputStream.toByteArray());
 
                 s3Client.putObject(DESTINATION_BUCKET, "allData.csv", csvInputStream, null);
             } else{
-                ByteArrayOutputStream csvOutputStream = csvWriter.writeCsv(stocks);
+                ByteArrayOutputStream csvOutputStream = csvWriter.writeCsv(registerFormats);
 
                 // Converte o ByteArrayOutputStream para InputStream para enviar ao bucket de destino
                 InputStream csvInputStream = new ByteArrayInputStream(csvOutputStream.toByteArray());

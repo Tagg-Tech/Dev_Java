@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Mapper {
-    public List<Stock> map(InputStream inputStream) throws IOException {
-        List<Stock> stocks = new ArrayList<>();
+    public List<RegisterFormat> map(InputStream inputStream) throws IOException {
+        List<RegisterFormat> registerFormats = new ArrayList<>();
         String linha;
         String separador = ",";
 
@@ -19,29 +19,29 @@ public class Mapper {
 
             // Ler linha por linha
             while ((linha = br.readLine()) != null) {
-                Stock stock = getStock(linha, separador);
+                RegisterFormat registerFormat = getStock(linha, separador);
 
                 // Adicionar à lista
-                stocks.add(stock);
+                registerFormats.add(registerFormat);
             }
         }
 
-        return stocks;
+        return registerFormats;
     }
 
-    private static Stock getStock(String linha, String separador) {
+    private static RegisterFormat getStock(String linha, String separador) {
         String[] dados = linha.split(separador);
 
         // Mapear os dados para o objeto Stock
-        Stock stock = new Stock();
-        stock.setIdDados(Integer.parseInt(dados[0]));
-        stock.setDataHora(dados[1]);
-        stock.setPercCPU(Double.parseDouble(dados[2]));
-        stock.setTempoInativo(Double.parseDouble(dados[3]));
-        stock.setPercRAM(Double.parseDouble(dados[4]));
-        stock.setPercDisc(Double.parseDouble(dados[5]));
-        stock.setUsedDisc(Long.parseLong(dados[6]));
-        stock.setFkNotebook(Integer.parseInt(dados[7]));
-        return stock;
+        RegisterFormat registerFormat = new RegisterFormat();
+        registerFormat.setIdDados(Integer.parseInt(dados[0]));
+        registerFormat.setDataHora(dados[1]);
+        registerFormat.setPercCPU(Double.parseDouble(dados[2]));
+        registerFormat.setTempoInativo(Double.parseDouble(dados[3]));
+        registerFormat.setPercRAM(Double.parseDouble(dados[4]));
+        registerFormat.setPercDisc(Double.parseDouble(dados[5]));
+        registerFormat.setUsedDisc(Long.parseLong(dados[6]));
+        registerFormat.setFkNotebook(Integer.parseInt(dados[7]));
+        return registerFormat;
     }
 }

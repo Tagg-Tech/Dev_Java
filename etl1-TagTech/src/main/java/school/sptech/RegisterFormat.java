@@ -1,6 +1,6 @@
 package school.sptech;
 
-public class Stock {
+public class RegisterFormat {
     // Referênciando elementos CSV
     private Integer idDados;
     private String dataHora;
