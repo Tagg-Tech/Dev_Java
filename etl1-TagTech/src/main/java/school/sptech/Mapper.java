@@ -32,16 +32,19 @@ public class Mapper {
     private static RegisterFormat getStock(String linha, String separador) {
         String[] dados = linha.split(separador);
 
-        // Mapear os dados para o objeto Stock
+        // CONSULTAR CSV PARA ALTERAR IDENTIFICAÇÃO DE CAMPO!!!!
+
+        // Mapear os dados para o objeto registerFormat
         RegisterFormat registerFormat = new RegisterFormat();
         registerFormat.setIdDados(Integer.parseInt(dados[0]));
-        registerFormat.setDataHora(dados[1]);
-        registerFormat.setPercCPU(Double.parseDouble(dados[2]));
-        registerFormat.setTempoInativo(Double.parseDouble(dados[3]));
-        registerFormat.setPercRAM(Double.parseDouble(dados[4]));
-        registerFormat.setPercDisc(Double.parseDouble(dados[5]));
-        registerFormat.setUsedDisc(Long.parseLong(dados[6]));
-        registerFormat.setFkNotebook(Integer.parseInt(dados[7]));
+        registerFormat.setPercRAM(Double.parseDouble(dados[1]));
+        registerFormat.setQtdRAM(Double.parseDouble(dados[2]));
+        registerFormat.setUsedDisc(Long.parseLong(dados[3]));
+        registerFormat.setPercDisc(Double.parseDouble(dados[4]));
+        registerFormat.setPercCPU(Double.parseDouble(dados[5]));
+        registerFormat.setTempoInativo(Double.parseDouble(dados[6]));
+        registerFormat.setDataHora(dados[7]);
+        registerFormat.setFkNotebook(Integer.parseInt(dados[8]));
         return registerFormat;
     }
 }

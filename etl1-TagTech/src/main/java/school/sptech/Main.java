@@ -41,10 +41,10 @@ public class Main implements RequestHandler<S3Event, String> {
             boolean s3ObjExist = s3Client.doesObjectExist(DESTINATION_BUCKET, "allData.csv");
             if(s3ObjExist){
                 InputStream s3InputStreamNew = s3Client.getObject(DESTINATION_BUCKET, "allData.csv").getObjectContent();
-                List<RegisterFormat> stocks1 = mapper.map(s3InputStreamNew);
+                List<RegisterFormat> registerFormats1 = mapper.map(s3InputStreamNew);
                 s3Client.deleteObject(DESTINATION_BUCKET, "allData.csv");
 
-                ByteArrayOutputStream csvOutputStream = csvWriter.writeCsv(registerFormats, stocks1);
+                ByteArrayOutputStream csvOutputStream = csvWriter.writeCsv(registerFormats, registerFormats1);
                 InputStream csvInputStream = new ByteArrayInputStream(csvOutputStream.toByteArray());
 
                 s3Client.putObject(DESTINATION_BUCKET, "allData.csv", csvInputStream, null);

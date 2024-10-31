@@ -3,12 +3,13 @@ package school.sptech;
 public class RegisterFormat {
     // Referênciando elementos CSV
     private Integer idDados;
-    private String dataHora;
+    private Double percRAM;
+    private Double qtdRAM;
     private Double percCPU;
     private Double tempoInativo;
-    private Double percRAM;
     private Double percDisc;
     private Long usedDisc;
+    private String dataHora;
     private Integer fkNotebook;
 
     // Getters and setters for generate object
@@ -36,4 +37,7 @@ public class RegisterFormat {
 
     public Integer getFkNotebook() { return fkNotebook; }
     public void setFkNotebook(Integer fkNotebook) { this.fkNotebook = fkNotebook; }
+
+    public Double getQtdRAM() {return qtdRAM;}
+    public void setQtdRAM(Double qtdRAM) {this.qtdRAM = qtdRAM;}
 }
