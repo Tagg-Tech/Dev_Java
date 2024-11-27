@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Mapper {
+public class MapperCsv extends FileProcessor{
     public List<RegisterFormat> map(InputStream inputStream) throws IOException {
         List<RegisterFormat> registerFormats = new ArrayList<>();
         String linha;
@@ -19,7 +19,7 @@ public class Mapper {
 
             // Ler linha por linha
             while ((linha = br.readLine()) != null) {
-                RegisterFormat registerFormat = getStock(linha, separador);
+                RegisterFormat registerFormat = getData(linha, separador);
 
                 // Adicionar à lista
                 registerFormats.add(registerFormat);
@@ -29,7 +29,7 @@ public class Mapper {
         return registerFormats;
     }
 
-    private static RegisterFormat getStock(String linha, String separador) {
+    public RegisterFormat getData(String linha, String separador) {
         String[] dados = linha.split(separador);
 
         // CONSULTAR CSV PARA ALTERAR IDENTIFICAÇÃO DE CAMPO!!!!
