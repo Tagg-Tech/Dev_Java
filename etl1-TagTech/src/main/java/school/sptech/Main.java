@@ -28,20 +28,32 @@ public class Main implements RequestHandler<S3Event, String> {
 
 
         try {
-            // Leitura do arquivo CSV do bucket de origem
-            InputStream s3InputStream = s3Client.getObject(sourceBucket, sourceKey).getObjectContent();
-            Mapper mapper = new Mapper();
-            // Conversão do CSV para uma lista de objetos Stock usando o Mapper
-            List<RegisterFormat> registerFormats = mapper.map(s3InputStream);
-            // Geração do arquivo CSV a partir da lista de Stock usando o CsvWriter
+            // Geração do arquivo CSV a partir da lista de RegisterFormat usando o CsvWriter
             CsvWriter csvWriter = new CsvWriter();
 
 
             // Verificando existência de arquivo no bucket de destino
             boolean s3ObjExist = s3Client.doesObjectExist(DESTINATION_BUCKET, "allData.csv");
+            List<RegisterFormat> registerFormats;
+            InputStream s3InputStream = s3Client.getObject(sourceBucket, sourceKey).getObjectContent();
+
             if(s3ObjExist){
+                // Lista que armazenara os arquivos
+                List<RegisterFormat> registerFormats1;
+
                 InputStream s3InputStreamNew = s3Client.getObject(DESTINATION_BUCKET, "allData.csv").getObjectContent();
-                List<RegisterFormat> registerFormats1 = mapper.map(s3InputStreamNew);
+                // Verifica a extensão do arquivo para direcionar o tipo de escrita
+                if(sourceBucket.contains(".csv")){
+                    MapperCsv mapperCsv = new MapperCsv();
+                    registerFormats = mapperCsv.map(s3InputStream);
+                    registerFormats1 = mapperCsv.map(s3InputStreamNew);
+                } else {
+                    MapperJson mapperJson = new MapperJson();
+                    registerFormats = mapperJson.map(s3InputStream);
+                    registerFormats1 = mapperJson.map(s3InputStreamNew);
+                }
+
+                // Removendo antigo arquivo para transformalo em novo
                 s3Client.deleteObject(DESTINATION_BUCKET, "allData.csv");
 
                 ByteArrayOutputStream csvOutputStream = csvWriter.writeCsv(registerFormats, registerFormats1);
@@ -49,6 +61,16 @@ public class Main implements RequestHandler<S3Event, String> {
 
                 s3Client.putObject(DESTINATION_BUCKET, "allData.csv", csvInputStream, null);
             } else{
+                // Verifica a extensão do arquivo para direcionar o tipo de escrita
+                if(sourceBucket.endsWith(".csv")){
+                    MapperCsv mapperCsv = new MapperCsv();
+                    registerFormats = mapperCsv.map(s3InputStream);
+                } else {
+                    MapperJson mapperJson = new MapperJson();
+                    registerFormats = mapperJson.map(s3InputStream);
+                }
+
+
                 ByteArrayOutputStream csvOutputStream = csvWriter.writeCsv(registerFormats);
 
                 // Converte o ByteArrayOutputStream para InputStream para enviar ao bucket de destino
