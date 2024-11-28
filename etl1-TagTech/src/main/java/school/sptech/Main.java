@@ -26,6 +26,9 @@ public class Main implements RequestHandler<S3Event, String> {
         String sourceBucket = s3Event.getRecords().getFirst().getS3().getBucket().getName();
         String sourceKey = s3Event.getRecords().getFirst().getS3().getObject().getKey();
 
+        // Verificando o nome do bucket
+        System.out.println("sourceKey: " + sourceKey);
+
 
         try {
             // Geração do arquivo CSV a partir da lista de RegisterFormat usando o CsvWriter
@@ -38,19 +41,24 @@ public class Main implements RequestHandler<S3Event, String> {
             InputStream s3InputStream = s3Client.getObject(sourceBucket, sourceKey).getObjectContent();
 
             if(s3ObjExist){
+                System.out.println("Objeto existe no S3!");
+
                 // Lista que armazenara os arquivos
                 List<RegisterFormat> registerFormats1;
 
                 InputStream s3InputStreamNew = s3Client.getObject(DESTINATION_BUCKET, "allData.csv").getObjectContent();
                 // Verifica a extensão do arquivo para direcionar o tipo de escrita
-                if(sourceBucket.contains(".csv")){
+                if(sourceKey.endsWith(".csv")){
+                    System.out.println("MapperCsv tr");
                     MapperCsv mapperCsv = new MapperCsv();
                     registerFormats = mapperCsv.map(s3InputStream);
                     registerFormats1 = mapperCsv.map(s3InputStreamNew);
                 } else {
+                    System.out.println("MapperJson tr");
                     MapperJson mapperJson = new MapperJson();
+                    MapperCsv mapperCsv = new MapperCsv();
                     registerFormats = mapperJson.map(s3InputStream);
-                    registerFormats1 = mapperJson.map(s3InputStreamNew);
+                    registerFormats1 = mapperCsv.map(s3InputStreamNew);
                 }
 
                 // Removendo antigo arquivo para transformalo em novo
@@ -61,8 +69,9 @@ public class Main implements RequestHandler<S3Event, String> {
 
                 s3Client.putObject(DESTINATION_BUCKET, "allData.csv", csvInputStream, null);
             } else{
+                System.out.println("Objeto não existe no S3!");
                 // Verifica a extensão do arquivo para direcionar o tipo de escrita
-                if(sourceBucket.endsWith(".csv")){
+                if(sourceKey.endsWith(".csv")){
                     MapperCsv mapperCsv = new MapperCsv();
                     registerFormats = mapperCsv.map(s3InputStream);
                 } else {
