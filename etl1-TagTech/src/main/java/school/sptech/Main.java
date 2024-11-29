@@ -17,7 +17,7 @@ public class Main implements RequestHandler<S3Event, String> {
     private final AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
 
     // Bucket de destino para o CSV gerado
-    private static final String DESTINATION_BUCKET = "bucket-trusted-tag-tech";
+    private static final String DESTINATION_BUCKET = "tagtech-trusted";
 
     @Override
     public String handleRequest(S3Event s3Event, Context context) {
@@ -58,13 +58,13 @@ public class Main implements RequestHandler<S3Event, String> {
                     MapperJson mapperJson = new MapperJson();
                     MapperCsv mapperCsv = new MapperCsv();
                     registerFormats = mapperJson.map(s3InputStream);
-                    registerFormats1 = mapperCsv.map(s3InputStreamNew);
+//                    registerFormats1 = mapperCsv.map(s3InputStreamNew);
                 }
 
                 // Removendo antigo arquivo para transformalo em novo
                 s3Client.deleteObject(DESTINATION_BUCKET, "allData.csv");
 
-                ByteArrayOutputStream csvOutputStream = csvWriter.writeCsv(registerFormats, registerFormats1);
+                ByteArrayOutputStream csvOutputStream = csvWriter.writeCsv(registerFormats); // PODE SER QUE PRECISO DO REGISTER FORMATS1
                 InputStream csvInputStream = new ByteArrayInputStream(csvOutputStream.toByteArray());
 
                 s3Client.putObject(DESTINATION_BUCKET, "allData.csv", csvInputStream, null);
@@ -92,6 +92,7 @@ public class Main implements RequestHandler<S3Event, String> {
         } catch (Exception e) {
             // Tratamento de erros e log do contexto em caso de exceção
             context.getLogger().log("Erro: " + e.getMessage());
+            e.printStackTrace();
             return "Erro no processamento";
         }
     }
