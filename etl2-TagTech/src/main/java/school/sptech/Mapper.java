@@ -23,7 +23,9 @@ public class Mapper {
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
             // Pular o cabeçalho
-            br.readLine();
+            // System.out.println(br.readLine());
+            String header = br.readLine();
+            System.out.println("Cabeçalho: " + header);
 
             // Ler linha por linha
             while ((linha = br.readLine()) != null) {
@@ -73,10 +75,11 @@ public class Mapper {
 
         // Mapear os dados para o objeto DataFormat
         DataFormat dataFormat = new DataFormat();
-        dataFormat.setDataHora(dados[1]);
-        dataFormat.setPercCPU(Double.parseDouble(dados[2]));
-        dataFormat.setPercRAM(Double.parseDouble(dados[4]));
-        dataFormat.setUsedDisc(Long.parseLong(dados[6]));
+        dataFormat.setDataHora(dados[7]);
+        dataFormat.setPercCPU(Double.parseDouble(dados[5]));
+        dataFormat.setPercRAM(Double.parseDouble(dados[1]));
+        System.out.println("Tipo de variável: " + dados[3].describeConstable());
+        dataFormat.setUsedDisc(Long.parseLong(dados[3]));
         return dataFormat;
     }
 }
