@@ -4,7 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
@@ -30,7 +33,11 @@ public class Mapper {
             // Ler linha por linha
             while ((linha = br.readLine()) != null) {
                 DataFormat dataFormat = getDataFormat(linha, separador);
-                LocalDate dataAtual = LocalDate.parse(dataFormat.getDataHora().substring(0, 10));
+                LocalDate dataAtual = parseDate(dataFormat.getDataHora()).toLocalDate();
+
+                if(dataAtual == null){
+                    System.out.println("Problema em conversão de data");
+                }
 
                 if( dataNow.isBefore(dataAtual) ){
                     percRam.add(dataFormat.getPercRAM());
@@ -68,8 +75,6 @@ public class Mapper {
 
 
 
-
-
     private static DataFormat getDataFormat(String linha, String separador) {
         String[] dados = linha.split(separador);
 
@@ -81,5 +86,21 @@ public class Mapper {
         System.out.println("Tipo de variável: " + dados[3].describeConstable());
         dataFormat.setUsedDisc(Long.parseLong(dados[3]));
         return dataFormat;
+    }
+
+
+    // Interpreta os dois tipos de data: ISO8601 e padrão
+    private static LocalDateTime parseDate(String data){
+        DateTimeFormatter formatoData = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        try{
+            return LocalDateTime.parse(data);
+        } catch (DateTimeException e1) { // exception 1
+            try{
+                return LocalDateTime.parse(data, formatoData);
+            } catch (DateTimeException e2){
+                return null;
+            }
+        }
     }
 }
